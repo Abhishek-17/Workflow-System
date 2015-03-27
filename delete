@@ -1,0 +1,13 @@
+drop table workflow;
+CREATE TABLE `workflow` (   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,   `name` varchar(80) NOT NULL ,   `workflow_desc` text,   `start_task_id` varchar(40) NOT NULL default '',   `start_date` date default NULL,   `end_date` date default NULL,   `created_user` varchar(16) default NULL,  PRIMARY KEY  (`id`) )ENGINE=MyISAM;
+drop table transition;
+CREATE TABLE `transition` (   `workflow_id` smallint(5) unsigned NOT NULL,   `id` int NOT NULL default '0',   `type` varchar(80) NOT NULL default '',   `outnode` smallint(5) unsigned default '0',   `transition_trigger` varchar(4)  default 'USER',   `time_limit` int(11) unsigned default NULL,     PRIMARY KEY  (`workflow_id`,`id`),     FOREIGN KEY (workflow_id) REFERENCES workflow(id) )ENGINE=MyISAM;
+drop table inputs;
+CREATE TABLE `inputs` (     `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,     `workflow_id` smallint(5) unsigned NOT NULL,     `transition_id` int NOT NULL,     `type` varchar(80) NOT NULL default '',     `name` varchar(80) NOT NULL default '',     `val` text,     PRIMARY KEY  (`id`),     FOREIGN KEY (transition_id) REFERENCES transition(id),     FOREIGN KEY (workflow_id) REFERENCES workflow(id)      )ENGINE=MyISAM;
+drop table login;
+CREATE TABLE `login` (     `id` int NOT NULL AUTO_INCREMENT,	`status` varchar(30) NOT NULL DEFAULT '0',     `username` varchar(30) NOT NULL,     `password` varchar(30) NOT NULL,    `org_id` int NOT NULL, `email` varchar(30) NOT NULL,     PRIMARY KEY (`id`) ,FOREIGN KEY (org_id) REFERENCES organization(id))ENGINE=MyISAM;
+INSERT INTO login(status,username,password,email) values('root','root','root','root');
+drop table organization;
+CREATE TABLE `organization` (     `id` int NOT NULL AUTO_INCREMENT,     `org_name` varchar(30) NOT NULL,     `org_address` varchar(30) NOT NULL,     `org_payment` int NOT NULL,     PRIMARY KEY (`id`) )ENGINE=MyISAM;
+drop table contract;
+CREATE TABLE `contract` (     `id` int NOT NULL AUTO_INCREMENT,     `con_name` varchar(30) NOT NULL ,     `con_manager` varchar(30) NOT NULL ,     `con_deadline` int NOT NULL ,     `org1_id` int NOT NULL ,     `org2_id` int NOT NULL ,     PRIMARY KEY (`id`) ,FOREIGN KEY (org1_id) REFERENCES organization(id),FOREIGN KEY (org2_id) REFERENCES organization(id))ENGINE=MyISAM;

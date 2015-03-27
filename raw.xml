@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<workflow name="abhi" version="1" user="abhi">
+    <node id="1" type="start" name="Task1">
+        <input type="radio" name="Gender">
+            <value val="male">Male</value>
+            <value val="female">Female</value>
+           
+        </input>
+        <input type="text" name="text1">
+            <value val="abhishek"> </value>
+        </input>
+        <outnode id="3"/>
+        <innodes id="0"/>
+    </node>
+        <!--
+        <input type="NULL" name="NULL">
+            <value val=""></value>
+        </input>
+        -->
+    <node id="3" type="intermediate" name="Task3">
+        <input type="checkbox" name="Bikes">
+            <value val="bike1">I have a pulsar!</value>
+            <value val="bike2">I have a ducati!</value>
+            <value fval="1,text1:abhi:1,Gender;func1:func2"> 
+                <get>1,text1:abhi:1,Gender;func1:func2</get>
+            </value>
+        </input>
+        <input type="checkbox" name="Cars">
+            <value val="audi">I have an audi!</value>
+        </input>
+        <outnode id="4"/>
+        <innodes id="1"/>
+    </node>
+	
+	<node id="4" type="ParallelSplit" name="Send_final_result">
+        <input id="1" type="text" name="score">
+            <value val="Default"></value>
+        </input>
+        <condition type="branch"> <!-- greater than -->
+                        <check property="value" val="5" operator="gt" inputname="score"/>
+			<outnode id="5" />
+	</condition>
+	<condition type="branch">
+                        <check property="value" val="5" operator="lt" inputname="score"/>
+			<outnode id="6" />
+	</condition>
+          <input type="text" name='megusta'> 
+              <value fval="1,text1:abhi:1,Gender;func1:func2"> </value> <!-- function name,nodeid,input name , function parameter -->
+          </input>
+          <innodes id="3"/>
+          <function>
+              
+                         <data type="node">1,text1</data>
+                         <data type="node">1,Gender</data>
+                         <data>abhishek</data>
+                         <functionname>display</functionname>
+                         <functionname>display2</functionname>
+             
+          </function>
+      
+    </node>
+	
+	
+	
+	<node id="5" type="ParallelSplit" name="Do_payment">
+        <input id="1" type="text" name="credit_card_number">
+            <value val="Default"></value>		
+			<condition type="validation"> 
+                            <check property="length" val="10" operator="gteq"/>
+                            <check property="alphanumeric" val="True" operator="eq"/>
+                        </condition>
+	</input>
+         <innodes id="4"/>
+         <outnode id="2" />
+    </node>
+	
+	
+    <node id="6" type="intermediate" name="send_email"><!-- xor split-->
+        <input type="text" name="email_addres">
+            <value val="Default"></value>
+			<condition type="validation">
+                            <check property="length" val="25" operator="gteq"/>
+                            <check property="alphanumeric" val="True" operator="eq"/>
+                            <check property="email" val="True" operator="eq"/>
+                         </condition>
+        </input>
+		<input type="radio" name="Payment_acknowledgement">
+            <value val="payment_success">Payment Received</value>
+            <value val="payment_fail">Payment Failed</value>
+            </input>
+            <condition type="branch" >
+                            <check property="value" val="payment_success" operator="eq" inputname="Payment_acknowledgement"/>
+                            <outnode id="7" />
+            </condition>
+            <condition type="branch" >
+                           <check property="value" val="payment_fail" operator="eq" inputname="Payment_acknowledgement"/>
+                           <outnode id="7" />
+	    </condition>
+	<!--	<input type="submit" name="Submit">
+			<value val="Submit"></value>
+		</input>-->
+	<!--	<outnode id="7"/>
+		<outnode id="2"/> -->
+         <innodes id="4"/>
+    </node>
+	
+	<node id="7" type="intermediate" name="Task6">
+        <input type="text" name="test">
+            <value val="Default"></value>
+			<condition type="validation">
+                             <check property="length" val="5" operator="lteq"/>
+                              <check property="numeric" val="True" operator="eq"/>
+                               
+                         </condition>
+        </input>
+                 <outnode id="8"/>
+                 <innodes id="6"/>
+    </node>
+	
+	<node id="8" type="intermediate" name="Shipment">
+        <input type="text" name="address">
+            <value val="Default"></value>
+			<condition type="validation">
+                               <check property="length" val="5" operator="lteq"/>
+                              <check property="numeric" val="True" operator="eq"/>
+                         </condition>
+        </input>
+		<input type="text" name="name">
+            <value val="Default"></value>
+			<condition type="validation">
+                               <check property="length" val="5" operator="lteq"/>
+                              <check property="numeric" val="True" operator="eq"/>
+                         </condition>
+        </input>
+		<input type="text" name="productinfo">
+            <value val="Default"></value>
+			<condition type="validation">
+                             <check property="length" val="5" operator="lteq"/>
+                              <check property="numeric" val="True" operator="eq"/>
+                         </condition>
+        </input>
+		<outnode id="2"/>
+                 <innodes id="7"/>
+    </node>
+    <node id="2" type="end" name="Task2">
+             <innodes id="5;8"/>
+     </node>
+</workflow>
+
